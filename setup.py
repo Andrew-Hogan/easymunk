@@ -13,7 +13,9 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/Andrew-Hogan/easymunk",
     packages=setuptools.find_packages(),
-    classifiers=(
+    install_requires=['munkres'],
+    platforms=['any'],
+    classifiers=[
         "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
         "Programming Language :: Python :: 3",
@@ -22,5 +24,5 @@ setuptools.setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Scientific/Engineering :: Mathematics",
         "Topic :: Utilities",
-    ),
+    ],
 )

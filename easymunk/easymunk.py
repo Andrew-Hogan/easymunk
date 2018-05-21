@@ -326,7 +326,6 @@ class EasyMunk(object):
             pair cost (Typically an int or float, or munkres.DISALLOWED if the pairing cannot happen)
         ____
         Underlying Hungarian algorithm implemented with the Munkres module.
-        Munkres module by Brian M. Clapper. (Munkres Copyright 2008-2017 Brian M. Clapper)
         EasyMunk module by Andrew M. Hogan. (EasyMunk Copyright 2018 Hogan Consulting Group)
         """
         # Init internal working syntax for supplied function call caching.
