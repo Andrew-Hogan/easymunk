@@ -15,7 +15,7 @@ See this module's easymunk.py for use instructions, or the [munkres documentatio
 
 ## Copyright
 
-EasyMunk module by Andrew M. Hogan. (EasyMunk Copyright &copy; 2018 Hogan Consulting Group)
+EasyMunk module by Andrew M. Hogan. (EasyMunk &copy; 2018 Hogan Consulting Group)
 
 ## License
 
