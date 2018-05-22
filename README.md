@@ -63,7 +63,7 @@ All external function parameters passed as positional, excluding \*\*kwargs. Opt
 * **optional** dict \*\*kwargs: Optional keyword arguments passed to score_function, assignment_function, and profit_to_cost_function.
 
 ### Class Variables
-* Recommendations on using the provided EasyMunk class attributes to change different operations such as dict key names, first-attempt function syntax / syntax attempt order to be completed.
+* Recommendations on using the provided EasyMunk class attributes to change different operations such as dict key names and first-attempt function syntax / syntax attempt order to be completed.
 
 ## Copyright
 
