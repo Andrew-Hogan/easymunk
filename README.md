@@ -23,7 +23,7 @@ Currently only tested compatible with Python 3.
 
 ## Use
 
-* At the top of your .py file, add "import easymunk.easymunk as ezmk"  # Temporary need for explicit import, will be changed.
+* At the top of your .py file, add "from easymunk.easymunk import EasyMunk as EasyMunk"  # Temporary need for easymunk.easymunk, will be changed. The "from x import EasyMunk as EasyMunk" makes things even easier though!
 * Although EasyMunk is a class, self is never used. You can call easymunk.EasyMunk class methods without creating an instance.
 * The two public methods are EasyMunk.print_info() and EasyMunk.sort()
 
