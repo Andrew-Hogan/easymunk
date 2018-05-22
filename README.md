@@ -23,7 +23,7 @@ Currently only tested compatible with Python 3.
 
 ## Use
 
-* At the top of your .py file, add "import easymunk"
+* At the top of your .py file, add "import easymunk.easymunk as ezmk"  # Temporary need for explicit import, will be changed.
 * Although EasyMunk is a class, self is never used. You can call easymunk.EasyMunk class methods without creating an instance.
 * The two public methods are EasyMunk.print_info() and EasyMunk.sort()
 
@@ -61,6 +61,9 @@ All external function parameters passed as positional, excluding \*\*kwargs. Opt
                                           type as the cost_function's return; in other words, a numeric value for pair score.
 * **optional** tuple \*args: Optional arguments passed to score_function, assignment_function, and profit_to_cost_function.
 * **optional** dict \*\*kwargs: Optional keyword arguments passed to score_function, assignment_function, and profit_to_cost_function.
+
+### Class Variables
+* Recommendations on using the provided EasyMunk class attributes to change different operations such as dict key names, first-attempt function syntax / syntax attempt order to be completed.
 
 ## Copyright
 
