@@ -36,7 +36,7 @@ Please see this module's Documentation at the top of ./easymunk/easymunk.py for 
 
 ### External Functions
 
-All external function parameters passed as positional, excluding \*\*kwargs. Optional parameters (such as list of lists of dicts containing pair score / primary object / secondary object, or \*args) which conflict with an external function's call are removed starting with \*args, then \*\*kwargs; at which point the least likely optional parameter is removed and \*args and \*kwargs are introduced again before continuing the cull cycle to just the minimum parameters. The working function parameter syntax is cached, but this process will always run a full cycle starting with the last cached syntax if a TypeError is met - meaning you can have dynamic method parameters or methods.
+All external function parameters passed as positional, excluding \*\*kwargs. Optional parameters (such as list of lists of dicts containing pair score / primary object / secondary object, or \*args) which conflict with an external function's call are removed starting with \*args, then \*\*kwargs; at which point the least likely optional parameter is removed and \*args and \*\*kwargs are introduced again before continuing the cull cycle to just the minimum parameters. The working function parameter syntax is cached, but this process will always run a full cycle starting with the last cached syntax if a TypeError is met - meaning you can have dynamic method parameters or methods.
 
 ### Parameters
 
