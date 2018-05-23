@@ -28,7 +28,7 @@ See this module's easymunk.py for use instructions, or the [munkres documentatio
 1. Ensure Python and Pip are in the environment path variable.
 2. Inside a terminal; enter the command "pip install easymunk"
 
-Currently only tested compatible with Python 3.
+Built in Python 3.6 - should now be compatible with Python 2.6+ and Python 3.6+.
 
 ## Use
 
