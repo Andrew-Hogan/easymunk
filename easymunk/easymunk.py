@@ -238,11 +238,13 @@ class EasyMunk(object):
             cls._score_methods_internal = [cls._call_function_with_args_kwargs,
                                            cls._call_function_with_kwargs,
                                            cls._call_function_no_args_nor_kwargs]
-        if not cls._profit_to_cost_methods_internal or not cls._profit_to_cost_argument_indexes_internal:
+        if not cls._profit_to_cost_methods_internal:
             # Default profit conversion supplied function call syntaxes.
             cls._profit_to_cost_methods_internal = [cls._call_function_with_args_kwargs,
                                                     cls._call_function_with_kwargs,
                                                     cls._call_function_no_args_nor_kwargs]
+        if not cls._profit_to_cost_argument_indexes_internal:
+            # Default profit conversion internal arguments supplied per syntax attempt loop.
             cls._profit_to_cost_argument_indexes_internal = [4, 3, 1]
         if not cls._assign_methods_internal:
             # Default assigning supplied function call syntaxes.
@@ -391,7 +393,13 @@ class EasyMunk(object):
     def _get_score(cls, score_methods, score_function, new_pair, *args, **kwargs):
         """Cycle function syntaxes until working is found, then return score if found or raise error."""
         chosen_method_id = score = None
-        _function_arguments = [*new_pair.values(), args, kwargs]
+        try:
+            _function_arguments = [*new_pair.values(), args, kwargs]
+        except (TypeError, SyntaxError):  # Python < 3.5 - will test later for exact error.
+            _function_arguments = []  # Pretty sure it is just a TypeError though.
+            for _val in new_pair.values():
+                _function_arguments.append(_val)
+            _function_arguments += [args, kwargs]
         for id_method, score_method in enumerate(score_methods):
             try:
                 score = score_method(score_function, _function_arguments, 2)
@@ -412,7 +420,14 @@ class EasyMunk(object):
             try:
                 export_field.append(_ezmk_append_arguments[export_id])
             except IndexError:
-                export_field.append({cls._score_default_name: _ezmk_append_arguments[0], **_ezmk_append_arguments[1]})
+                try:
+                    export_field.append({cls._score_default_name: _ezmk_append_arguments[0],
+                                         **_ezmk_append_arguments[1]})
+                except (TypeError, SyntaxError):  # Python < 3.5
+                    dict_for_export = {cls._score_default_name: _ezmk_append_arguments[0]}
+                    for key, value in _ezmk_append_arguments[1].items():
+                        dict_for_export[key] = value
+                    export_field.append(dict_for_export)
 
     @classmethod
     def _create_and_score_profit_row_stacks(cls, primary_objects, secondary_objects, score_function,
@@ -498,13 +513,34 @@ class EasyMunk(object):
         """Set external references / assignments / actions from optimized pairs."""
         assign_methods = cls._assign_methods_internal
         chosen_method_id = None
+        _python_strict_unpack = False
         for pair in chosen_pairs:
-            _function_arguments = [*pair.values(), args, kwargs]
+            try:
+                _function_arguments = [*pair.values(), args, kwargs]
+            except (TypeError, SyntaxError):  # Python < 3.5
+                _python_strict_unpack = True
+                _function_arguments = []
+                for _val in pair.values():
+                    _function_arguments.append(_val)
+                _function_arguments += [args, kwargs]
             for id_method, assign_method in enumerate(assign_methods):
                 try:
                     assign_method(assignment_function, _function_arguments, 2)
-                except TypeError:
-                    pass
+                except (TypeError, SyntaxError) as e:
+                    if _python_strict_unpack:  # Python < 3.5
+                        try:
+                            _py_less_35_primary = pair[cls._primary_default_name]
+                            _py_less_35_secondary = pair[cls._secondary_default_name]
+                            assignment_function(_py_less_35_primary, _py_less_35_secondary, *args, **kwargs)
+                        except TypeError:
+                            pass
+                        else:
+                            chosen_method_id = id_method
+                            break
+                    elif isinstance(e, SyntaxError):  # NOT Python < 3.5 and not due to call syntax; raise except.
+                        raise
+                    else:
+                        pass
                 else:
                     chosen_method_id = id_method
                     break
@@ -522,19 +558,42 @@ class EasyMunk(object):
 
     # Possible function call syntaxes.
     @staticmethod
-    def _call_function_with_args_kwargs(score_function, arg_list, stop_arg_index):
+    def _call_function_with_args_kwargs(supplied_function, arg_list, stop_arg_index):
         """Call supplied function with both *args and **kwargs."""
-        return score_function(*arg_list[:stop_arg_index], *arg_list[-2], **arg_list[-1])
+        return supplied_function(*arg_list[:stop_arg_index], *arg_list[-2], **arg_list[-1])
 
     @staticmethod
-    def _call_function_with_kwargs(score_function, arg_list, stop_arg_index):
+    def _call_function_with_kwargs(supplied_function, arg_list, stop_arg_index):
         """Call supplied function without *args, but with **kwargs."""
-        return score_function(*arg_list[:stop_arg_index], **arg_list[-1])
+        return supplied_function(*arg_list[:stop_arg_index], **arg_list[-1])
 
     @staticmethod
-    def _call_function_no_args_nor_kwargs(score_function, arg_list, stop_arg_index):
+    def _call_function_no_args_nor_kwargs(supplied_function, arg_list, stop_arg_index):
         """Call supplied function without either *args nor **kwargs."""
-        return score_function(*arg_list[:stop_arg_index])
+        return supplied_function(*arg_list[:stop_arg_index])
+
+    @classmethod
+    def change_function_syntax_defaults_and_order(cls, score_methods=None, profit_to_cost_methods=None,
+                                                  profit_to_cost_argument_indexes=None, assign_methods=None):
+        """Change the order or syntax of call function syntax attempts - not advised. All params are lists."""
+        if score_methods:
+            cls._score_methods_internal = score_methods
+        if profit_to_cost_methods:
+            cls._profit_to_cost_methods_internal = profit_to_cost_methods
+        if profit_to_cost_argument_indexes:
+            cls._profit_to_cost_argument_indexes_internal = profit_to_cost_argument_indexes
+        if assign_methods:
+            cls._assign_methods_internal = assign_methods
+
+    @classmethod
+    def change_default_dict_keys(cls, primary_name=None, secondary_name=None, score_name=None):
+        """Change the dict key names - not advised. Params are any dict-key compatible type - cannot be None."""
+        if primary_name is not None:
+            cls._primary_default_name = primary_name  # Key for primary object.
+        if secondary_name is not None:
+            cls._secondary_default_name = secondary_name  # Key for secondary object.
+        if score_name is not None:
+            cls._score_default_name = score_name  # Key for score value.
 
 
 if __name__ == '__main__':

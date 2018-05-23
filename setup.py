@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="easymunk",
-    version="0.0.1",
+    version="1.0.0",
     author="Andrew M. Hogan",
     author_email="drewthedruid@gmail.com",
     description="An easy, versatile interface and processing handler for the munkres module.",
@@ -19,6 +19,8 @@ setuptools.setup(
         "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 2",
+        "Programming Language :: Python",
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
         "Topic :: Software Development :: Libraries :: Python Modules",
