@@ -128,7 +128,7 @@ class BaseHungarianObject(object):
 
     @staticmethod
     def calculate_hungarian_score(_):
-        '''Placeholder score method; returns unassignable score if used.'''
+        '''Placeholder score method; returns un-assignable score if used.'''
         return munkres.DISALLOWED
 
     @staticmethod
@@ -189,17 +189,19 @@ import munkres
 
 class EasyMunk(object):
     """Match two groups using the cost-minimizing Hungarian algorithm."""
-    _primary_default_name = "primary"
-    _secondary_default_name = "secondary"
-    _score_methods_internal = []
-    _profit_to_cost_methods_internal = []
-    _profit_to_cost_argument_indexes_internal = []
-    _assign_methods_internal = []
-    last_profit_matrix = None
-    last_cost_matrix = None
-    last_chosen_indexes = None
-    last_total_cost = None
-    last_total_profit = None
+    Forbidden = munkres.DISALLOWED  # Optional EZ DISALLOWED value.
+    _primary_default_name = "primary"  # Key for primary object.
+    _secondary_default_name = "secondary"  # Key for secondary object.
+    _score_default_name = "score"  # Key for score value.
+    _score_methods_internal = []  # Initial score methods syntax list set by _internal_methods.
+    _profit_to_cost_methods_internal = []  # Profit to cost conversion syntax list set by _internal_methods.
+    _profit_to_cost_argument_indexes_internal = []  # Profit to cost syntax index list set by _internal_methods.
+    _assign_methods_internal = []  # Assignment function syntax list set by _internal_methods.
+    last_profit_matrix = None  # Last profit matrix, if convert to cost matrix was set to True.
+    last_cost_matrix = None  # Last cost matrix.
+    last_chosen_indexes = None  # Last [primary_objects, secondary_objects] indices chosen by Munkres.
+    last_total_cost = None  # Last total cost as calculated by chosen indices -> last_cost_matrix
+    last_total_profit = None  # Last total profit as calculated by chosen indices -> last_profit_matrix (if it exists)
 
     def __init__(self):
         """Placeholder __init__ method."""
@@ -208,6 +210,7 @@ class EasyMunk(object):
     @classmethod
     def print_info(cls):
         """Print EasyMunk profit & cost matrices, along with Munkres chosen indexes and total cost & profit."""
+        print("____")
         if cls.last_profit_matrix:
             print("\nProfit Matrix: ")
             munkres.print_matrix(cls.last_profit_matrix)
@@ -279,8 +282,8 @@ class EasyMunk(object):
                 assignment_function input: primary_object, secondary_object, *args, **kwargs.
                 assignment_function return None: Your assignment function should not return anything.
             :param bool convert_profit_to_cost: Determine if profit to cost function is used.
-            :param function profit_to_cost_function: If None and convert_profit_to_cost,
-                default Munkres conversion of (cost_index_value = max(profit_array) - profit_index_value) is used.
+            :param function profit_to_cost_function: If None and convert_profit_to_cost is True,
+                    default conversion of (cost_index_value = max(profit_array) - profit_index_value) is used.
                 profit_to_cost_function input: single profit value, *args, **kwargs.
                 profit_to_cost_function return float: Your conversion function's return should be the same
                 type as the cost_function's return; in other words, a numeric value.
@@ -402,14 +405,14 @@ class EasyMunk(object):
             score_methods[:] = score_methods[chosen_method_id:] + score_methods[:chosen_method_id]
         return score
 
-    @staticmethod
-    def _row_append(_ezmk_scores_this_row, _ezmk_append_arguments):
+    @classmethod
+    def _row_append(cls, _ezmk_scores_this_row, _ezmk_append_arguments):
         """Append pair information to either two or three export fields."""
         for export_id, export_field in enumerate(_ezmk_scores_this_row):
             try:
                 export_field.append(_ezmk_append_arguments[export_id])
             except IndexError:
-                export_field.append({"score": _ezmk_append_arguments[0], **_ezmk_append_arguments[1]})
+                export_field.append({cls._score_default_name: _ezmk_append_arguments[0], **_ezmk_append_arguments[1]})
 
     @classmethod
     def _create_and_score_profit_row_stacks(cls, primary_objects, secondary_objects, score_function,
