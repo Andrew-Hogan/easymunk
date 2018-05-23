@@ -75,7 +75,7 @@ All external function parameters passed as positional, excluding \*\*kwargs. Opt
 
 EasyMunk.change_function_syntax_defaults_and_order() & EasyMunk.change_default_dict_keys()
 
-* Neither of these are necessary. However, you might want to do so anyways without changing a \_private attribute. Recommendations on using the provided EasyMunk class attributes to change different operations such as dict key names and first-attempt function syntax / syntax attempt order to be completed. However, documentation on what each class variable is responsible for is available within the EasyMunk module.
+* There is no need to change either of these. However, you might want to do so anyways without changing a \_private attribute. Recommendations on using the provided EasyMunk class attributes to change different operations such as dict key names and first-attempt function syntax / syntax attempt order to be completed. However, documentation on what each class variable is responsible for is available within the EasyMunk module.
 
 ## Copyright
 
