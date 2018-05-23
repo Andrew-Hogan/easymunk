@@ -74,10 +74,10 @@ All external function parameters passed as positional, excluding \*\*kwargs. Opt
 ### Class Variables
 * Recommendations on using the provided EasyMunk class attributes to change different operations such as dict key names and first-attempt function syntax / syntax attempt order to be completed. However, documentation on what each class variable is responsible for is available within the EasyMunk module.
 
-###EasyMunk.change_function_syntax_defaults_and_order()
+### EasyMunk.change_function_syntax_defaults_and_order()
 Public method now available - See documentation inside module.
 
-###EasyMunk.change_default_dict_keys()
+### EasyMunk.change_default_dict_keys()
 Public method now available - See documentation inside module.
 
 ## Copyright
