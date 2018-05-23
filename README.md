@@ -2,14 +2,6 @@
 
 EasyMunk provides a versatile interface alternative and pre-processing handler to the Munkres module for score-based (Hungarian algorithm) assignments.
 
-What might one use cost minimization / profit maximization assignments for? Anything you want to make more robust!
-* Assigning pairs.
-  * For example: objects in images to information about those objects.
-* Assigning tasks.
-* Evaluating changing cost attributes over function iterations. (duplicate your primaries per iteration and forbid!)
-* Handling and evaluating all potential values for the best single value for every actor.
-* And more!
-
 ## Purpose
 
 The EasyMunk module interfaces with the Munkres module to:
@@ -17,6 +9,15 @@ The EasyMunk module interfaces with the Munkres module to:
 2. Reduce the amount of pre-processing required for munkres.
 3. Automatically account for some special-case munkres decisions.
 4. Do all of the above without reducing munkres' functionality.
+
+What might one use the Hungarian algorithm to accomplish?
+
+* Assigning pairs.
+  * For example: objects in images to information about those objects.
+* Assigning tasks.
+* Evaluating changing cost attributes over function iterations. (duplicate your primaries per iteration and forbid!)
+* Handling and evaluating all potential values for the best single value for every actor.
+* And more!
 
 See this module's easymunk.py for use instructions, or the [munkres documentation][] for more algorithm details.
 
