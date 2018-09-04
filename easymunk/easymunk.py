@@ -188,24 +188,46 @@ import munkres
 
 
 class EasyMunk(object):
-    """Match two groups using the cost-minimizing Hungarian algorithm."""
-    Forbidden = munkres.DISALLOWED  # Optional EZ DISALLOWED value.
-    _primary_default_name = "primary"  # Key for primary object.
-    _secondary_default_name = "secondary"  # Key for secondary object.
-    _score_default_name = "score"  # Key for score value.
-    _score_methods_internal = []  # Initial score methods syntax list set by _internal_methods.
-    _profit_to_cost_methods_internal = []  # Profit to cost conversion syntax list set by _internal_methods.
-    _profit_to_cost_argument_indexes_internal = []  # Profit to cost syntax index list set by _internal_methods.
-    _assign_methods_internal = []  # Assignment function syntax list set by _internal_methods.
-    last_profit_matrix = None  # Last profit matrix, if convert to cost matrix was set to True.
-    last_cost_matrix = None  # Last cost matrix.
-    last_chosen_indexes = None  # Last [primary_objects, secondary_objects] indices chosen by Munkres.
-    last_total_cost = None  # Last total cost as calculated by chosen indices -> last_cost_matrix
-    last_total_profit = None  # Last total profit as calculated by chosen indices -> last_profit_matrix (if it exists)
+    """
+    Match two groups using the cost-minimizing Hungarian algorithm.
 
-    def __init__(self):
+    :Class Variables:
+        :cvar forbidden: Optional EZ DISALLOWED value.
+        :cvar _primary_default_name
+        :cvar _secondary_default_name: (default="secondary") Key for secondary object.
+        :cvar _score_default_name: (default="score") Key for score value.
+        :cvar _score_methods_internal: (default=[]) Initial score methods syntax list set by _internal_methods.
+        :cvar _profit_to_cost_methods_internal: (default=[]) Profit to cost conversion syntax list set by
+            _internal_methods.
+        :cvar _profit_to_cost_argument_indexes_internal: (default=[]) Profit to cost syntax index list set by
+            _internal_methods.
+        :cvar _assign_methods_internal: (default=[]) Assignment function syntax list set by _internal_methods.
+        :cvar last_profit_matrix: (default=None) Last profit matrix, if convert to cost matrix was set to True.
+        :cvar last_cost_matrix: (default=None) Last cost matrix.
+        :cvar last_chosen_indexes: (default=None) Last [primary_objects, secondary_objects] indices chosen by Munkres.
+        :cvar last_total_cost: (default=None) Last total cost as calculated by chosen indices -> last_cost_matrix.
+        :cvar last_total_profit: (default=None) Last total profit as calculated by chosen indices -> last_profit_matrix.
+    """
+    forbidden = munkres.DISALLOWED
+    _primary_default_name = "primary"
+    _secondary_default_name = "secondary"
+    _score_default_name = "score"
+    _score_methods_internal = []
+    _profit_to_cost_methods_internal = []
+    _profit_to_cost_argument_indexes_internal = []
+    _assign_methods_internal = []
+    last_profit_matrix = None
+    last_cost_matrix = None
+    last_chosen_indexes = None
+    last_total_cost = None
+    last_total_profit = None
+
+    def __init__(self, *args, **kwargs):
         """Placeholder __init__ method."""
-        pass
+        self.sort(*args, **kwargs)
+
+    def __call__(self, *args, **kwargs):
+        self.sort(*args, **kwargs)
 
     @classmethod
     def print_info(cls):
@@ -234,12 +256,12 @@ class EasyMunk(object):
         """Set supplied function internal call syntax methods."""
         # Tested until working syntax is found, then places that syntax as the starting point for further calls.
         if not cls._score_methods_internal:
-            # Default scoring supplied function call syntaxes.
+            # Default scoring supplied function call syntax.
             cls._score_methods_internal = [cls._call_function_with_args_kwargs,
                                            cls._call_function_with_kwargs,
                                            cls._call_function_no_args_nor_kwargs]
         if not cls._profit_to_cost_methods_internal:
-            # Default profit conversion supplied function call syntaxes.
+            # Default profit conversion supplied function call syntax.
             cls._profit_to_cost_methods_internal = [cls._call_function_with_args_kwargs,
                                                     cls._call_function_with_kwargs,
                                                     cls._call_function_no_args_nor_kwargs]
@@ -247,7 +269,7 @@ class EasyMunk(object):
             # Default profit conversion internal arguments supplied per syntax attempt loop.
             cls._profit_to_cost_argument_indexes_internal = [4, 3, 1]
         if not cls._assign_methods_internal:
-            # Default assigning supplied function call syntaxes.
+            # Default assigning supplied function call syntax.
             cls._assign_methods_internal = [cls._call_function_with_args_kwargs,
                                             cls._call_function_with_kwargs,
                                             cls._call_function_no_args_nor_kwargs]
@@ -307,7 +329,7 @@ class EasyMunk(object):
             returns:
             pair score (Typically an int or float, or munkres.DISALLOWED if the pairing cannot happen)
         ____
-            assigment_function()
+            assignment_function()
 
             inputs:
             primary_object of type [whatever type you passed a list of as primary_objects, can be anything]
@@ -391,7 +413,7 @@ class EasyMunk(object):
 
     @classmethod
     def _get_score(cls, score_methods, score_function, new_pair, *args, **kwargs):
-        """Cycle function syntaxes until working is found, then return score if found or raise error."""
+        """Cycle function syntax until working is found, then return score if found or raise error."""
         chosen_method_id = score = None
         try:
             _function_arguments = [*new_pair.values(), args, kwargs]
@@ -469,7 +491,7 @@ class EasyMunk(object):
     @classmethod
     def _get_cost(cls, profit_to_cost_argument_indexes, profit_to_cost_methods, profit_to_cost_function, profit,
                   primary, secondary, all_profits_and_pairs, *args, **kwargs):
-        """Cycle function syntaxes until working is found, then return cost if found or raise error."""
+        """Cycle function syntax until working is found, then return cost if found or raise error."""
         chosen_method_id = cost = chosen_arg_index_id = None
         _function_arguments = [profit, primary, secondary, all_profits_and_pairs, args, kwargs]
         for id_arg_index, argument_index in enumerate(profit_to_cost_argument_indexes):
@@ -556,7 +578,7 @@ class EasyMunk(object):
                          + " without " + error_type.__name__ + ".")
         return error_message
 
-    # Possible function call syntaxes.
+    # Possible function call syntax.
     @staticmethod
     def _call_function_with_args_kwargs(supplied_function, arg_list, stop_arg_index):
         """Call supplied function with both *args and **kwargs."""
